@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "*"
+en-core-web-sm = {file = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz"}
+spacy = "==2.3.5"
+install = "*"
+scispacy = "*"
+python-rake = "==1.4.4"
+requests = "*"
+google-auth-oauthlib = "*"
+google-api-python-client = "*"
+oauth2client = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
