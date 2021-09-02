@@ -14,6 +14,7 @@ requests = "*"
 google-auth-oauthlib = "*"
 google-api-python-client = "*"
 oauth2client = "*"
+pyspellchecker = "*"
 
 [dev-packages]
 
