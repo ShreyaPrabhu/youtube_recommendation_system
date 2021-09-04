@@ -1,4 +1,5 @@
 from profanity_filter import ProfanityFilter
+import spacy
 
 def profanity_check(search_query):
     pf = ProfanityFilter(languages=['en'])

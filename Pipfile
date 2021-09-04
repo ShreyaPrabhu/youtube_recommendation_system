@@ -19,6 +19,8 @@ profanity-filter = "*"
 levenshtein = "*"
 python-levenshtein = "*"
 regex = "*"
+flask-swagger-ui = "*"
+flask-cors = "*"
 
 [dev-packages]
 
