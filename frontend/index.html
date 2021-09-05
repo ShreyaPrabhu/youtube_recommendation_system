@@ -19,10 +19,9 @@
     <nav>
     <div class="nav-wrapper">
       <div class="row">
-        <div class="col s3"> </div>
       <a href="#" class="brand-logo">Youtube Learning Recommendations</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="https://github.com/ShreyaPrabhu">Source Code</a></li>
+        <li><a href="https://github.com/ShreyaPrabhu"><img src="github.png" style = "padding-top:8px;height:43px;width:36px"></a></li>
       </ul>
       </div>
       </div>
@@ -32,9 +31,9 @@
     <div class="nav-wrapper">
       <form>
         <div class="input-field">
-          <input id="search" type="search" required onkeyup="callSearch(document.getElementById('search').value)">
+          <input id="search" type="search" required>
           <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-          <i class="material-icons">close</i>
+          <i class="material-icons" id="close">close</i>
         </div>
       </form>
     </div>
@@ -46,42 +45,69 @@
 
       <script>
 
-        function tableCreate(items) {
-            var body = document.getElementsByClassName('response')[0];
-            var tbl = document.createElement('table');
-            tbl.style.width = '100%';
-            tbl.setAttribute('border', '1');
-            var tbdy = document.createElement('tbody');
-            for (var i = 0; i < items.length; i++) {
-              var tr = document.createElement('tr');
-              var td = document.createElement('td');
-              td.colSpan = "3"
-              var img = document.createElement('img');
-              img.src = items[i].snippet.thumbnails.default.url
-              img.className = "square"
-              td.appendChild(img)
-              tr.appendChild(td)
-              var td = document.createElement('td');
-              td.colSpan = "3"
-              var title = document.createTextNode(items[i].snippet.title)
-              td.appendChild(title)
-              tr.appendChild(td)
-              var td = document.createElement('td');
-              td.colSpan = "3"
-              var channelTitle = document.createTextNode(items[i].snippet.channelTitle)
-              td.appendChild(channelTitle)
-              tr.appendChild(td)
-              var td = document.createElement('td');
-              td.colSpan = "3"
-              var description = document.createTextNode(items[i].snippet.description)
-              td.appendChild(description)
-              tr.appendChild(td)
-              tbdy.appendChild(tr);
-            }
-            tbl.appendChild(tbdy);
-            body.appendChild(tbl)
+        document.getElementById('search').addEventListener('input', function(){
+            if(this.value != "") document.getElementById('close').style.opacity = 1
+            else document.getElementById('close').style.opacity = 0
+          });
+
+        document.getElementById('close').addEventListener('click', function(){
+          document.getElementById('search').value = "";
+          document.getElementById('response').innerHTML = "";
+          this.style.opacity = 0
+        });
+
+        document.getElementById("search").onkeypress = function(e) {
+          var key = e.charCode || e.keyCode || 0;
+          if (key == 13) {
+            callSearch(this.value)
+            e.preventDefault();
+          }
         }
-        tableCreate();
+
+        function buildCard(items) {
+          var body = document.getElementsByClassName('response')[0];
+          body.innerHTML = "";
+          var divrow = document.createElement('div');
+          divrow.className = 'row'
+          for (var i = 0; i < items.length; i++) {
+            var divcol = document.createElement('div');
+            divcol.className = 'col s8 m4 offset-s2'
+            var divcard = document.createElement('div');
+            divcard.className = 'card'
+            divcard.style.width = "400px"
+            divcard.style.height = "600px"
+            var divcardImg = document.createElement('div');
+            divcardImg.className = 'card-image'
+            var img = document.createElement('img');
+            img.src = items[i].snippet.thumbnails.high.url
+            img.className = "square"
+            divcardImg.appendChild(img)
+            var divcardContent = document.createElement('div');
+            divcardContent.className = 'card-content'
+            var span = document.createElement('span');
+            span.className = "card-title"
+            var title = document.createTextNode(items[i].snippet.title);
+            span.appendChild(title)
+            divcardContent.appendChild(span)
+            var p = document.createElement('p');
+            var channelTitle = document.createTextNode(items[i].snippet.channelTitle);
+            var description = document.createTextNode(items[i].snippet.description);
+            p.appendChild(channelTitle)
+            p.appendChild(description)
+            divcardContent.appendChild(p)
+            divcard.appendChild(divcardImg)
+            divcard.appendChild(divcardContent)
+            divcol.appendChild(divcard)
+            divrow.appendChild(divcol)
+            if((i+1)%3 == 0) {
+              body.appendChild(divrow)
+              divrow = document.createElement('div');
+              divrow.className = 'row'
+              divcol = document.createElement('div');
+              divcol.className = 'col s8 m4 offset-s2'
+            }
+          }
+        }
 
         function callSearch(value) {
           var xhttp = new XMLHttpRequest();
@@ -89,7 +115,13 @@
             if (this.readyState == 4 && this.status == 200) {
                 json = JSON.parse(this.responseText);
                 var items = json.items;
-                tableCreate(items)
+                buildCard(items)
+            }
+            if(this.readyState == 4 && this.status == 400) {
+                alert("Bad request provided!!")
+            }
+            if(this.readyState == 4 && this.status == 500) {
+                alert("Oops!! Internal server error. We will fix this soon.")
             }
           };
           xhttp.open("GET", "http://127.0.0.1:5000/search?search_query=" + value, true);

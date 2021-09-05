@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import render_template
+from flask import abort
 from flask_cors import CORS
 from spellcorrection import correct_misspelled_words
 from profanity_checker import profanity_check
@@ -19,7 +20,7 @@ def search():
     search_query = request.args['search_query']
     search_query = correct_misspelled_words(search_query)
     if(profanity_check(search_query)):
-        raise Exception("Foul language used")
+        abort(400)
     else:
         keywords = rake_impl(search_query)
         print(keywords)
