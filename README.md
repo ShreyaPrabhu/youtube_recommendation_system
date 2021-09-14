@@ -3,6 +3,7 @@
 A flask based python application that interprets user search query using RAKE, performs spell check and profanity check and returns a list of youtube video recommendations.
 
 ![Demo video](demo16mb.mov)
+Click on this link and select view raw. The demo video should get downloaded in local.
 
 ### Backend -
 Flask framework
